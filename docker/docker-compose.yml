@@ -1,7 +1,7 @@
 # Simple docker-composer.yml
 # You can change your port or volume location
 
-version: '3.3'
+version: "3.3"
 
 services:
   uptime-kuma:
@@ -9,5 +9,10 @@ services:
     container_name: uptime-kuma
     volumes:
       - ./uptime-kuma:/app/data
-    ports:
-      - 3001:3001
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.uptime.rule=Host(`dashboard.galeadtool2.ch`)"
+      - "traefik.http.services.uptime.loadbalancer.server.port=3001"
+      - "traefik.http.routers.uptime.entrypoints=uptime"
+      - "traefik.http.routers.uptime.tls.certresolver=myresolver"
